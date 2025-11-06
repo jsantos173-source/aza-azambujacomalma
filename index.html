@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AZA – Azambuja com Alma</title>
+  <style>
+    /* ====== Estilos gerais ====== */
+    *{box-sizing:border-box;margin:0;padding:0;font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif}
+    body{background:#fff;color:#222;line-height:1.5}
+    header{background:#5a2ca0;color:#fff;padding:2rem 1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    header img{width:160px;height:auto;display:block;margin:0 auto 0.8rem}
+    header h1{text-transform:uppercase;letter-spacing:1.5px;font-size:1.6rem}
+    header p{opacity:.95;margin-top:.4rem}
+
+    nav{background:#3c1a78;display:flex;justify-content:center;flex-wrap:wrap}
+    nav a{color:#fff;padding:.7rem 1.1rem;text-decoration:none;display:block}
+    nav a:hover{background:#7c4dff}
+
+    section{max-width:1000px;margin:1.2rem auto;padding:1rem}
+    h2{color:#5a2ca0;text-align:center;margin-bottom:.8rem}
+
+    .card{background:#fff;padding:1rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:1rem;border-left:5px solid #5a2ca0}
+
+    /* ====== Galeria ====== */
+    .tabs{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1rem}
+    .tab{background:#f3e5ff;color:#5a2ca0;border:none;padding:.5rem .9rem;border-radius:8px;font-weight:600;cursor:pointer}
+    .tab.active{background:#5a2ca0;color:#fff}
+    .galeria-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .galeria-grid img{width:100%;height:auto;border-radius:10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.12);transition:transform .25s}
+    .galeria-grid img:hover{transform:scale(1.03)}
+
+    /* fade class */
+    .fade{opacity:0;transition:opacity .45s ease-in-out}
+    .fade.show{opacity:1}
+
+    /* lightbox */
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);align-items:center;justify-content:center;z-index:9999}
+    .lightbox img{max-width:92%;max-height:92%;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.6)}
+
+    /* ====== Eventos ====== */
+    .grid-eventos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem}
+    .evento-card{background:#fff;padding:1rem;border-radius:10px;border-left:5px solid #5a2ca0;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:left}
+    .evento-card h3{color:#5a2ca0;margin-bottom:.4rem}
+    .btn{display:inline-block;background:#5a2ca0;color:#fff;padding:.6rem 1rem;border-radius:8px;text-decoration:none;border:none;cursor:pointer}
+    .btn:hover{background:#7c4dff}
+
+    /* formulário e footer simples */
+    form{display:grid;gap:.6rem;margin-top:.6rem}
+    input,textarea{padding:.6rem;border:1px solid #ccc;border-radius:6px;font-size:1rem}
+    input[type="submit"]{background:#5a2ca0;color:#fff;border:none;padding:.6rem 1rem;border-radius:6px;cursor:pointer}
+    footer{background:#3c1a78;color:#fff;text-align:center;padding:1rem;margin-top:2rem}
+    a.inline{color:#5a2ca0;text-decoration:none;font-weight:600}
+    @media (max-width:600px){
+      header h1{font-size:1.2rem}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="LOGO.jpg" alt="LOGO AZA" />
+    <h1>AZA – Azambuja com Alma</h1>
+    <p>Associação Desportiva dedicada à Corrida e Caminhada</p>
+  </header>
+
+  <nav>
+    <a href="#sobre">Sobre</a>
+    <a href="#atividades">Atividades</a>
+    <a href="#eventos">Eventos</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#socios">Torna-te Sócio</a>
+    <a href="#contactos">Contactos</a>
+  </nav>
+
+  <section id="sobre" class="card">
+    <h2>Sobre Nós</h2>
+    <p>A <strong>AZA – Azambuja com Alma</strong> promove corrida e caminhada no concelho de Azambuja. Organizamos treinos, provas e iniciativas comunitárias.</p>
+  </section>
+
+  <section id="atividades" class="card">
+    <h2>Atividades</h2>
+    <ul>
+      <li>🏃 Treinos de corrida para todos os níveis</li>
+      <li>🚶 Caminhadas em grupo</li>
+      <li>🎯 Participação em corridas locais</li>
+    </ul>
+  </section>
+
+  <!-- ======= Eventos (dinâmico via eventos.json) ======= -->
+  <section id="eventos" class="card">
+    <h2>Próximos Eventos</h2>
+    <div id="lista-eventos" class="grid-eventos">
+      <p>Carregando eventos...</p>
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <button id="toggleEventosBtn" class="btn" style="display:none">Ver mais eventos ⬇️</button>
+    </div>
+  </section>
+
+  <!-- ======= Galeria com separadores ======= -->
+  <section id="galeria" class="card">
+    <h2>Galeria</h2>
+
+    <div class="tabs" role="tablist" aria-label="Categorias da galeria">
+      <button class="tab active" data-cat="corridas">🏃 Corridas</button>
+      <button class="tab" data-cat="bicicleta">🚴 Bicicleta</button>
+      <button class="tab" data-cat="caminhadas">🚶 Caminhadas</button>
+      <button class="tab" data-cat="eventos">🎉 Eventos</button>
+      <button class="tab" data-cat="podios">🏆 Pódios</button>
+    </div>
+
+    <div id="galeria-grid" class="galeria-grid fade" aria-live="polite"></div>
+
+    <div id="lightbox" class="lightbox" onclick="fecharLightbox()" role="dialog" aria-hidden="true">
+      <img id="lightbox-img" src="" alt="Imagem ampliada" />
+    </div>
+  </section>
+
+  <!-- ======= Sócios / Formulário ======= -->
+  <section id="socios" class="card">
+    <h2>Torna-te Sócio</h2>
+    <p>Preencha o formulário para se inscrever.</p>
+
+    <!-- NOTE: action usa o email correto e _next relativo (obrigado.html) -->
+    <form action="https://formsubmit.co/aza.azambujacomalma@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nova inscrição de sócio - AZA" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_next" value="obrigado.html" />
+      <input type="text" name="nome" placeholder="Nome completo" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="text" name="telefone" placeholder="Telefone" />
+      <textarea name="mensagem" rows="4" placeholder="Por que queres juntar-te à AZA?" required></textarea>
+      <input type="submit" value="Enviar Candidatura" />
+    </form>
+
+    <p style="margin-top:.8rem"><a href="Ficha_Inscricao_AZA.pdf" class="inline" download>📄 Descarregar Ficha de Inscrição (PDF)</a></p>
+  </section>
+
+  <section id="contactos" class="card">
+    <h2>Contactos</h2>
+    <p>📍 Azambuja, Portugal<br>📧 <a href="mailto:azambujacomalma@gmail.com">azambujacomalma@gmail.com</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 AZA – Azambuja com Alma</p>
+  </footer>
+
+  <!-- ======= Scripts no fim do body ======= -->
+  <script>
+    /* ---------- Eventos (carrega eventos.json) ---------- */
+    (function(){
+      const eventosUrl = 'eventos.json';
+      let todosEventos = [];
+      let mostrando = 12;
+      let mostrandoTodos = false;
+      const listaEl = document.getElementById('lista-eventos');
+      const btnToggle = document.getElementById('toggleEventosBtn');
+
+      function renderEventos() {
+        listaEl.innerHTML = '';
+        const limite = mostrandoTodos ? todosEventos.length : mostrando;
+        const eventosParaMostrar = todosEventos.slice(0, limite);
+        if (eventosParaMostrar.length === 0) {
+          listaEl.innerHTML = '<p>Nenhum evento disponível no momento.</p>';
+          btnToggle.style.display = 'none';
+          return;
+        }
+        eventosParaMostrar.forEach(ev => {
+          const div = document.createElement('div');
+          div.className = 'evento-card';
+          div.innerHTML = '<h3>' + (ev.titulo || '') + '</h3>'
+            + '<p><strong>Data:</strong> ' + (ev.data || '') + '</p>'
+            + '<p><strong>Local:</strong> ' + (ev.local || '') + '</p>';
+          listaEl.appendChild(div);
+        });
+        if (todosEventos.length > mostrando) {
+          btnToggle.style.display = 'inline-block';
+          btnToggle.textContent = mostrandoTodos ? 'Ver menos eventos ⬆️' : 'Ver mais eventos ⬇️';
+        } else {
+          btnToggle.style.display = 'none';
+        }
+      }
+
+      btnToggle.addEventListener('click', () => {
+        mostrandoTodos = !mostrandoTodos;
+        renderEventos();
+        // scroll suave até aos eventos no caso de expandir
+        if (mostrandoTodos) {
+          listaEl.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      });
+
+      fetch(eventosUrl).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      }).then(json => {
+        todosEventos = Array.isArray(json) ? json : [];
+        renderEventos();
+      }).catch(err => {
+        console.error('Erro a carregar eventos.json:', err);
+        listaEl.innerHTML = '<p style="color:#b00020">Não foi possível carregar os eventos.</p>';
+      });
+    })();
+
+    /* ---------- Galeria com separadores + fade + lightbox ---------- */
+    (function(){
+      // lista de imagens por categoria — actualiza os nomes conforme as tuas imagens
+      const galerias = {
+        corridas: [
+          {src: 'imagens/12Km Salvaterra.jpg', alt: '12Km de Salvatera'},
+          {src: 'imagens/Trail da Gloria 2025.jpg', alt: 'Trail da Gloria'},
+          {src: 'imagens/Trail do Cartaxo 2025.jpg', alt: 'Trail do Cartaxo'},
+          {src: 'imagens/Treino1.jpg', alt: 'Treino'},
+          {src: 'imagens/Trail da Gloria 2025.jpg', alt: 'Trail da Gloria'}
+        ],
+        bicicleta: [
+          {src: 'imagens/Passeio BTT Lisboa-Azambuja 2025.jpg', alt: 'Passeio de bicicleta'},
+          {src: 'imagens/Passeio BTT Lisboa-Azambuja 2025_1.jpg', alt: 'Passeio de bicicleta 1'},
+          {src: 'imagens/Passeio BTT Mais Leziria 2025.jpg', alt: 'Passeio de bicicleta 2'}
+        ],
+        caminhadas: [
+          {src: 'imagens/Caminhada Cimpor 2019.jpg', alt: 'Caminhada Cimpor'},
+          {src: 'imagens/Caminhada Gloria 2025.jpg', alt: 'Caminhada da Gloria'},
+          {src: 'imagens/Caminhada Gloria 2025_1.jpg', alt: 'Caminhada da Golria 1'}
+        ],
+        eventos: [
+          {src: 'imagens/p‌ic-nic 2025.jpg', alt: 'Evento local'},
+          {src: 'imagens/p‌ic-nic 2025_1.jpg', alt: 'Evento local'},
+          {src: 'imagens/p‌ic-nic 2025_2.jpg', alt: 'Treino especial'}
+        ],
+        podios: [
+          {src: 'imagens/corrida lusical 2025.jpg', alt: 'Equipa AZA no pódio'},
+          {src: 'imagens/trail dos Arneiros 2025 - F50.jpg', alt: 'Equipa AZA no pódio 1'},
+          {src: 'imagens/trail dos Arneiros 2025 - F60.jpg', alt: 'Equipa AZA no pódio 2'},
+          {src: 'imagens/trail dos Arneiros 2025 - M60.jpg', alt: 'Equipa AZA no pódio 3'}
+        ]
+      };
+
+      const grid = document.getElementById('galeria-grid');
+      const tabButtons = document.querySelectorAll('.tab');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+
+      function abrirLightbox(imgEl){
+        lightboxImg.src = imgEl.src;
+        lightbox.style.display = 'flex';
+        lightbox.setAttribute('aria-hidden','false');
+      }
+      window.abrirLightbox = abrirLightbox; // expõe para uso onclick
+
+      function fecharLightbox(){
+        lightbox.style.display = 'none';
+        lightbox.setAttribute('aria-hidden','true');
+        lightboxImg.src = '';
+      }
+      window.fecharLightbox = fecharLightbox;
+
+      function renderGaleria(categoria){
+        grid.classList.remove('show');
+        grid.classList.remove('fade'); // reinicia
+        grid.classList.add('fade');
+        grid.innerHTML = '';
+        const fotos = galerias[categoria] || [];
+        // cria imagens
+        fotos.forEach(f => {
+          const img = document.createElement('img');
+          img.src = f.src;
+          img.alt = f.alt || '';
+          img.addEventListener('click', () => abrirLightbox(img));
+          grid.appendChild(img);
+        });
+        // ativa botão/tab
+        tabButtons.forEach(b => b.classList.remove('active'));
+        const btn = Array.from(tabButtons).find(b => b.dataset.cat === categoria);
+        if (btn) btn.classList.add('active');
+        // trigger fade-in
+        setTimeout(() => grid.classList.add('show'), 50);
+      }
+
+      // liga eventos dos botões
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => renderGaleria(btn.dataset.cat));
+      });
+
+      // inicia com corridas
+      document.addEventListener('DOMContentLoaded', () => renderGaleria('corridas'));
+
+      // Fechar lightbox ao pressionar Esc
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') fecharLightbox();
+      });
+    })();
+  </script>
+</body>
+</html>
