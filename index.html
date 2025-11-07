@@ -54,6 +54,40 @@
     @media (max-width:600px){
       header h1{font-size:1.2rem}
     }
+/* --- Redes Sociais --- */
+.redes-sociais {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.redes-sociais a {
+  display: inline-block;
+  background: #f5e9ff;
+  padding: 0.6rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.redes-sociais a:hover {
+  background: #5a2ca0;
+  transform: translateY(-3px) scale(1.1);
+}
+
+.redes-sociais a img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  filter: brightness(0) saturate(100%) invert(25%) sepia(90%) saturate(2000%) hue-rotate(250deg);
+  transition: filter 0.3s ease;
+}
+
+.redes-sociais a:hover img {
+  filter: brightness(0) invert(1);
+}
+
   </style>
 </head>
 <body>
@@ -142,11 +176,26 @@
     <p style="margin-top:.8rem"><a href="Ficha_Inscricao_AZA.pdf" class="inline" download>📄 Descarregar Ficha de Inscrição (PDF)</a></p>
   </section>
 
-  <section id="contactos" class="card">
-    <h2>Contactos</h2>
-    <p>📍 Azambuja, Portugal<br>📧 <a href="mailto:az.azambujacomalma@gmail.com">aza.azambujacomalma@gmail.com</a></p>
-    <p>📱 Redes sociais: <a href="#">Facebook</a> | <a href="#">Instagram</a></p>
-  </section>
+  <section id="contactos" class="card" style="text-align:center;">
+  <h2>Contactos</h2>
+  <img src="LOGO1.jpg" alt="Logótipo AZA" style="width:120px;margin:0.5rem auto 1rem;display:block;" />
+  <p>📍 Azambuja, Portugal</p>
+  <p>📧 <a href="mailto:aza.azambujacomalma@gmail.com" class="inline">aza.azambujacomalma@gmail.com</a></p>
+
+  <h3 style="margin-top:1rem;color:#5a2ca0;">Segue-nos nas Redes Sociais</h3>
+  <div class="redes-sociais">
+    <a href="https://www.facebook.com/azambujacomalma" target="_blank" aria-label="Facebook AZA">
+      <img src="imagens/facebook.svg" alt="Facebook" />
+    </a>
+    <a href="https://www.instagram.com/azambujacomalma" target="_blank" aria-label="Instagram AZA">
+      <img src="imagens/instagram.svg" alt="Instagram" />
+    </a>
+    <a href="https://www.strava.com/clubs/azambuja" target="_blank" aria-label="Strava AZA">
+      <img src="imagens/strava.svg" alt="Strava" />
+    </a>
+  </div>
+</section>
+
 
   <footer>
     <p>&copy; 2025 AZA – Azambuja com Alma</p>
